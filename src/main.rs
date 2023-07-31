@@ -1,7 +1,7 @@
 use atty;
 use clap::Parser;
 use lazy_static;
-use regex::RegexSet;
+use regex::{Regex, RegexSet};
 use std::{
     error,
     ffi::OsStr,
@@ -13,7 +13,9 @@ use std::{
 const BACKTRACE_START: &'static str = "stack backtrace:";
 const BACKTRACE_END: &'static str = "";
 
-const DRIVER_PATTERNS: &'static [&'static str] = &[r"rustc_driver_impl\[[\w\d]+\]"];
+const HEADER_PATTERN: &'static str = r"^(?:\s+)?\d+:\s";
+
+const DRIVER_PATTERNS: &'static [&'static str] = &[r"rustc_driver_impl(?:\[[\w\d]+\])?"];
 const FN_TRAIT_PATTERNS: &'static [&'static str] = &[r"core(?:\[[\w\d]+\])?::ops::function"];
 const PANIC_PATTERNS: &'static [&'static str] = &[
     r"std(?:\[[\w\d]+\])?::backtrace_rs",
@@ -40,6 +42,9 @@ const TIMING_PATTERNS: &'static [&'static str] = &[
 const TLS_PATTERNS: &'static [&'static str] = &[r"rustc_middle(?:\[[\w\d]+\])?::ty::context::tls"];
 
 lazy_static::lazy_static! {
+    static ref HEADER_REGEX: Regex =
+         Regex::new(HEADER_PATTERN).expect("compiling header regex failed");
+
     static ref DRIVER_REGEXES: RegexSet =
          RegexSet::new(DRIVER_PATTERNS).expect("compiling driver regexes failed");
     static ref FN_TRAIT_REGEXES: RegexSet =
@@ -184,7 +189,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
         // ```
         //
         // We'll skip lines based on the contents of the header.
-        let is_header = line.find("0x").is_some();
+        let is_header = HEADER_REGEX.is_match(&line);
         if is_header {
             skip_until_next_header = false;
 
