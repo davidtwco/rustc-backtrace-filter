@@ -151,11 +151,12 @@ struct Args {
 }
 
 fn main() -> Result<(), Box<dyn error::Error>> {
+    let args = Args::parse();
+
     if atty::is(atty::Stream::Stdin) {
         return Ok(());
     }
 
-    let args = Args::parse();
     let mut output = args
         .output
         .map(|path| Output::new(path.as_os_str()))
