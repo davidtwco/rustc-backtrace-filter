@@ -31,10 +31,8 @@ const QUERY_SYSTEM_PATTERNS: &'static [&'static str] = &[
     r"rustc_query_impl\[[\w\d]+\]",
     r"rustc_middle\[[\w\d]+\]::query",
 ];
-const THREAD_PATTERNS: &'static [&'static str] = &[
-    "__pthread_joiner_wake",
-    r"std(?:\[[\w\d]+\])?::sys::unix::thread",
-];
+const THREAD_PATTERNS: &'static [&'static str] =
+    &["__pthread_joiner_wake", r"std(?:\[[\w\d]+\])?::sys::unix::thread"];
 const TIMING_PATTERNS: &'static [&'static str] = &[
     r"rustc_data_structures(?:\[[\w\d]+\])?::profiling",
     r"<rustc_session(?:\[[\w\d]+\])?::session::Session>::time",
@@ -88,12 +86,8 @@ impl Output {
             return Ok(Output::Stdout(io::stdout()));
         }
 
-        let file = OpenOptions::new()
-            .read(true)
-            .write(true)
-            .create(true)
-            .truncate(true)
-            .open(path)?;
+        let file =
+            OpenOptions::new().read(true).write(true).create(true).truncate(true).open(path)?;
         if is_fifo(file.metadata()?.file_type()) {
             Ok(Output::File(file))
         } else {
