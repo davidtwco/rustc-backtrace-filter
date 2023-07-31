@@ -23,7 +23,7 @@ Simple utility to filter out unwanted parts of a rustc backtrace
 Usage: rbf [OPTIONS]
 
 Options:
-  -o <OUTPUT>                        Path where filtered input should be output, defaults to stdout
+  -o <OUTPUT>                        Path where filtered input should be output. [default: "-"]
   -d, --driver <DRIVER>              Should driver-related lines be filtered from backtrace? [default: true] [possible values: true, false]
   -f, --fn-trait <FN_TRAIT>          Should function-trait-related lines be filtered from backtrace? [default: true] [possible values: true, false]
   -p, --panics <PANICS>              Should panic/backtrace-related lines be filtered from backtrace? [default: true] [possible values: true, false]

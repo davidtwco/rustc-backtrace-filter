@@ -118,7 +118,7 @@ impl Write for Output {
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 struct Args {
-    /// Path where filtered input should be output, defaults to stdout.
+    /// Path where filtered input should be output. [default: "-"]
     #[arg(short, value_hint = clap::ValueHint::FilePath)]
     output: Option<PathBuf>,
     /// Should driver-related lines be filtered from backtrace?
