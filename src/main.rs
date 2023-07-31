@@ -1,5 +1,5 @@
 use atty;
-use clap::Parser;
+use clap::{ArgAction, Parser};
 use lazy_static;
 use regex::{Regex, RegexSet};
 use std::{
@@ -120,31 +120,33 @@ impl Write for Output {
     }
 }
 
+/// Simple utility to filter out unwanted parts of a rustc backtrace.
 #[derive(Parser)]
+#[command(author, version, about, long_about = None)]
 struct Args {
     /// Path where filtered input should be output, defaults to stdout.
     #[arg(short, value_hint = clap::ValueHint::FilePath)]
     output: Option<PathBuf>,
     /// Should driver-related lines be filtered from backtrace?
-    #[arg(short, long, default_value_t = true)]
+    #[arg(short, long, default_value_t = true, action = ArgAction::Set)]
     driver: bool,
     /// Should function-trait-related lines be filtered from backtrace?
-    #[arg(short, long, default_value_t = true)]
+    #[arg(short, long, default_value_t = true, action = ArgAction::Set)]
     fn_trait: bool,
     /// Should panic/backtrace-related lines be filtered from backtrace?
-    #[arg(short, long, default_value_t = true)]
+    #[arg(short, long, default_value_t = true, action = ArgAction::Set)]
     panics: bool,
     /// Should query-system-related lines be filtered from backtrace?
-    #[arg(short, long, default_value_t = true)]
+    #[arg(short, long, default_value_t = true, action = ArgAction::Set)]
     query_system: bool,
     /// Should thread-related lines be filtered from backtrace?
-    #[arg(short, long, default_value_t = true)]
+    #[arg(short, long, default_value_t = true, action = ArgAction::Set)]
     threads: bool,
     /// Should timing-related lines be filtered from backtrace?
-    #[arg(short, long, default_value_t = true)]
+    #[arg(short, long, default_value_t = true, action = ArgAction::Set)]
     timing: bool,
     /// Should tls-related lines be filtered from backtrace?
-    #[arg(short, long, default_value_t = true)]
+    #[arg(short, long, default_value_t = true, action = ArgAction::Set)]
     tls: bool,
 }
 
